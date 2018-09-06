@@ -14,7 +14,8 @@
   ],
   "author": "Miguel Angel González",
   "license": "MIT",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "cypress": "^3.1.0"
   }
 }
