@@ -27,8 +27,22 @@ function randomClick(monkeysLeft) {
     }   
 }
 
+//Random text
+function randomTextField(monkeysLeft){
+    var monkeysLeft = monkeysLeft;
+    if(monkeysLeft > 0) {
+        cy.get('input[type="text"]').then($inputs => {
+            console.log(`Number of inputs: ${$inputs.length}`)
+            var randomInput = $inputs.get(getRandomInt(0, $inputs.length));
+            cy.wrap(randomInput).type("-ABC123DEF456", { force: true });
+            monkeysLeft = monkeysLeft - 1;
+            setTimeout(randomTextField, 1000, monkeysLeft);
+        });
+    }
+}
+
 //Random events
-function randomEvent(eventNum){
+function randomEvent(eventNum, monkeysLeft){
     switch (eventNum) {
         case 1://click on link
             randomClick(monkeysLeft);
