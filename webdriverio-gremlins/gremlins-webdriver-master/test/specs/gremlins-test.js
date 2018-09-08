@@ -14,7 +14,22 @@ function unleashGremlins(ttl, callback) {
     horde.stop();
     callback();
   }
-  var horde = window.gremlins.createHorde();
+  
+
+  window.gremlins.species.formFiller().canFillElement(item=> {
+      return (( (item.tagName === "input" &&
+                (item.attributes['type'] === "text" || item.attributes['type'] === "password" || item.attributes['type'] === "email" || item.attributes['type'] === "number")) ||
+                (item.tagName === "textarea")) && !item.hidden);
+      });
+
+  
+  window.gremlins.species.clicker().clickTypes(['click']).canClick(item => {
+        return ((item.tagName === "button" || item.tagName === "a") && !item.hidden);
+  });
+  var horde = window.gremlins.createHorde().gremlin(window.gremlins.species.clicker()).gremlin(window.gremlins.species.formFiller());
+
+  horde.strategy(window.gremlins.strategies.distribution().delay(50).distribution([0.6,0.4,]))
+
   horde.seed(1234);
 
   horde.after(callback);
@@ -23,9 +38,9 @@ function unleashGremlins(ttl, callback) {
   horde.unleash();
 }
 
-describe('Monkey testing with gremlins ', function() {
+describe('Monkey testing with gremlins ', function () {
 
-  it('it should not raise any error', function() {
+  it('it should not raise any error', function () {
     browser.url('/');
     browser.click('button=Cerrar');
 
@@ -36,8 +51,8 @@ describe('Monkey testing with gremlins ', function() {
     browser.executeAsync(unleashGremlins, 50000);
   });
 
-  afterAll(function() {
-    browser.log('browser').value.forEach(function(log) {
+  afterAll(function () {
+    browser.log('browser').value.forEach(function (log) {
       browser.logger.info(log.message.split(' ')[2]);
     });
   });
