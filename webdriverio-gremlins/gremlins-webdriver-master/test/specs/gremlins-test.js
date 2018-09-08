@@ -15,14 +15,12 @@ function unleashGremlins(ttl, callback) {
     callback();
   }
   
-
   window.gremlins.species.formFiller().canFillElement(item=> {
       return (( (item.tagName === "input" &&
                 (item.attributes['type'] === "text" || item.attributes['type'] === "password" || item.attributes['type'] === "email" || item.attributes['type'] === "number")) ||
                 (item.tagName === "textarea")) && !item.hidden);
       });
 
-  
   window.gremlins.species.clicker().clickTypes(['click']).canClick(item => {
         return ((item.tagName === "button" || item.tagName === "a") && !item.hidden);
   });
@@ -39,14 +37,11 @@ function unleashGremlins(ttl, callback) {
 }
 
 describe('Monkey testing with gremlins ', function () {
-
   it('it should not raise any error', function () {
     browser.url('/');
     browser.click('button=Cerrar');
-
     browser.timeoutsAsyncScript(60000);
     browser.executeAsync(loadScript);
-
     browser.timeoutsAsyncScript(60000);
     browser.executeAsync(unleashGremlins, 50000);
   });
@@ -56,5 +51,4 @@ describe('Monkey testing with gremlins ', function () {
       browser.logger.info(log.message.split(' ')[2]);
     });
   });
-
 });
