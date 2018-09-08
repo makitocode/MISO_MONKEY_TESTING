@@ -6,6 +6,18 @@ describe('Los estudiantes under monkeys', function() {
         randomClick(10);
     })
 })
+
+describe('HomeWork monkeys', function() {
+    it('visits los estudiantes and execute random monkeys', function() {
+        cy.visit('https://losestudiantes.co');
+        cy.contains('Cerrar').click();
+        cy.wait(500);
+        ///Select random event
+        let event = getRandomInt(1,4);
+        randomEvent(event, 10)
+    })
+})
+
 //Random function
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -26,21 +38,44 @@ function randomClick(monkeysLeft) {
         });
     }   
 }
-
 //Random text
-function randomTextField(monkeysLeft){
-    var monkeysLeft = monkeysLeft;
+function randomSetTextInput(monkeysLeft){
+    let monkeysLeft = monkeysLeft;
     if(monkeysLeft > 0) {
         cy.get('input[type="text"]').then($inputs => {
             console.log(`Number of inputs: ${$inputs.length}`)
-            var randomInput = $inputs.get(getRandomInt(0, $inputs.length));
-            cy.wrap(randomInput).type("-ABC123DEF456", { force: true });
+            let randomInputText = $inputs.get(getRandomInt(0, $inputs.length));
+            cy.wrap(randomInputText).type("-ABC123DEF456", { force: true });
             monkeysLeft = monkeysLeft - 1;
-            setTimeout(randomTextField, 1000, monkeysLeft);
+            setTimeout(randomSetTextInput, 1000, monkeysLeft);
         });
     }
 }
-
+//randomComboSelect
+function randomComboSelect(monkeysLeft){
+    let monkeysLeft = monkeysLeft;
+    if(monkeysLeft > 0){
+        cy.get('select').then($combos => {
+            let randomInput = $combos.get(getRandomInt(0, $combos.length));
+            var option = randomInput.options[getRandomInt(0, randomInput.options.length)];
+            cy.wrap(randomInput).select(option.value, { force: true });
+            monkeysLeft = monkeysLeft - 1;
+            setTimeout(randomComboSelect, 1000, monkeysLeft);
+        });
+    }
+}
+//Random ClickButton
+function randomClickButton(monkeysLeft){
+    let monkeysLeft = monkeysLeft;
+    cy.get('button').then($inputs => {
+        var randomInput = $inputs.get(getRandomInt(0, $inputs.length));
+        if (!Cypress.dom.isHidden(randomInput)) {
+            cy.wrap(randomInput).click({ force: true });
+            monkeysLeft = monkeysLeft - 1;
+        }
+        setTimeout(randomClickButton, 1000, monkeysLeft);
+    });
+}
 //Random events
 function randomEvent(eventNum, monkeysLeft){
     switch (eventNum) {
@@ -48,7 +83,7 @@ function randomEvent(eventNum, monkeysLeft){
             randomClick(monkeysLeft);
             break;
         case 2://Text field
-            randomTextField(monkeysLeft)
+            randomSetTextInput(monkeysLeft)
             break;
         case 3://combo select
             randomComboSelect(monkeysLeft)
